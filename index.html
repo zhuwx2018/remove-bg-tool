@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 背景去除工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖼️ AI 背景去除工具</h1>
+            <p>上传图片，AI 自动去除背景</p>
+        </header>
+
+        <main>
+            <div class="upload-section" id="dropZone">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div class="upload-content">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p>点击或拖拽图片到这里</p>
+                    <span class="hint">支持 PNG, JPG, WEBP (最大 10MB)</span>
+                </div>
+            </div>
+
+            <div class="settings">
+                <label>
+                    <span>API Key:</span>
+                    <input type="password" id="apiKey" placeholder="输入你的 remove.bg API Key">
+                </label>
+                <button id="saveKey" class="btn-secondary">保存</button>
+                <span id="keyStatus" class="status"></span>
+            </div>
+
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <div class="image-compare">
+                    <div class="image-box">
+                        <h3>原图</h3>
+                        <img id="originalImage" alt="原图">
+                    </div>
+                    <div class="image-box">
+                        <h3>结果</h3>
+                        <img id="resultImage" alt="结果">
+                        <div class="checkerboard" id="resultCheckerboard"></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button id="downloadBtn" class="btn-primary">下载图片</button>
+                    <button id="resetBtn" class="btn-secondary">重新上传</button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在处理中...</p>
+                <span id="progressText">请稍候</span>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by <a href="https://www.remove.bg/zh" target="_blank">remove.bg API</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
