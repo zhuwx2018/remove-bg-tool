@@ -107,7 +107,8 @@ async function processImage(file, apiKey) {
     try {
         progressText.textContent = '正在去除背景...';
         
-        const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+        // 使用 Cloudflare Worker 代理调用 remove.bg API（解决跨域问题）
+        const response = await fetch('https://remove-bg-worker.zhuwx2018.workers.dev', {
             method: 'POST',
             headers: {
                 'X-Api-Key': apiKey
