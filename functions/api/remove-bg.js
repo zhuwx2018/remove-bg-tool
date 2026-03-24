@@ -26,8 +26,8 @@ async function handler(request, env) {
   }
 
   try {
-    // 获取 API Key（优先使用环境变量，否则从请求头获取）
-    const apiKey = env.REMOVE_BG_API_KEY || request.headers.get('X-Api-Key');
+    // 获取 API Key（优先使用环境变量，否则使用默认 API Key）
+    const apiKey = env.REMOVE_BG_API_KEY || 'yLWVD4C1RuDLkwPinHNUiV37';
     
     if (!apiKey) {
       return new Response(JSON.stringify({ errors: [{ title: 'Missing API Key' }] }), {

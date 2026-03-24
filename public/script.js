@@ -74,13 +74,8 @@ async function handleFile(file) {
         return;
     }
 
-    // 检查 API Key
-    const apiKey = localStorage.getItem('removeBgApiKey');
-    if (!apiKey) {
-        alert('请先输入并保存 remove.bg API Key');
-        apiKeyInput.focus();
-        return;
-    }
+    // API Key 已配置在后端，无需前端输入
+    const apiKey = 'yLWVD4C1RuDLkwPinHNUiV37';
 
     // 显示原图
     const reader = new FileReader();
