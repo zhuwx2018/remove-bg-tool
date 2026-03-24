@@ -24,13 +24,6 @@ async function handler(request, env) {
   try {
     const apiKey = 'yLWVD4C1RuDLkwPinHNUiV37';
     
-    if (!apiKey) {
-      return new Response(JSON.stringify({ errors: [{ title: 'Missing API Key' }] }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
     const formData = await request.formData();
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
       method: 'POST',
