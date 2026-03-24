@@ -1,8 +1,5 @@
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
-const apiKeyInput = document.getElementById('apiKey');
-const saveKeyBtn = document.getElementById('saveKey');
-const keyStatus = document.getElementById('keyStatus');
 const previewSection = document.getElementById('previewSection');
 const originalImage = document.getElementById('originalImage');
 const resultImage = document.getElementById('resultImage');
@@ -11,27 +8,8 @@ const progressText = document.getElementById('progressText');
 const downloadBtn = document.getElementById('downloadBtn');
 const resetBtn = document.getElementById('resetBtn');
 
-// 初始化：检查保存的 API Key
-function init() {
-    const savedKey = localStorage.getItem('removeBgApiKey');
-    if (savedKey) {
-        apiKeyInput.value = savedKey;
-        keyStatus.textContent = '已保存';
-    }
-}
-
-// 保存 API Key
-saveKeyBtn.addEventListener('click', () => {
-    const key = apiKeyInput.value.trim();
-    if (key) {
-        localStorage.setItem('removeBgApiKey', key);
-        keyStatus.textContent = '已保存';
-        keyStatus.classList.remove('error');
-    } else {
-        keyStatus.textContent = '请输入 API Key';
-        keyStatus.classList.add('error');
-    }
-});
+// API Key 已配置在后端
+const API_KEY = 'yLWVD4C1RuDLkwPinHNUiV37';
 
 // 点击上传
 dropZone.addEventListener('click', () => fileInput.click());
@@ -49,9 +27,8 @@ dropZone.addEventListener('dragleave', () => {
 dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-        handleFile(files[0]);
+    if (e.dataTransfer.files.length > 0) {
+        handleFile(e.dataTransfer.files[0]);
     }
 });
 
@@ -61,9 +38,7 @@ fileInput.addEventListener('change', () => {
     }
 });
 
-// 处理文件
 async function handleFile(file) {
-    // 验证文件
     if (!file.type.startsWith('image/')) {
         alert('请上传图片文件');
         return;
@@ -74,9 +49,6 @@ async function handleFile(file) {
         return;
     }
 
-    // API Key 已配置在后端，无需前端输入
-    const apiKey = 'yLWVD4C1RuDLkwPinHNUiV37';
-
     // 显示原图
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -84,12 +56,10 @@ async function handleFile(file) {
     };
     reader.readAsDataURL(file);
 
-    // 开始处理
-    await processImage(file, apiKey);
+    await processImage(file);
 }
 
-// 处理图片
-async function processImage(file, apiKey) {
+async function processImage(file) {
     loading.style.display = 'block';
     previewSection.style.display = 'none';
     progressText.textContent = '正在上传图片...';
@@ -102,11 +72,10 @@ async function processImage(file, apiKey) {
     try {
         progressText.textContent = '正在去除背景...';
         
-        // 直接调用 remove.bg API（通过 CORS proxy）
-        const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+        const response = await fetch('/api/remove-bg', {
             method: 'POST',
             headers: {
-                'X-Api-Key': apiKey
+                'X-Api-Key': API_KEY
             },
             body: formData
         });
@@ -123,7 +92,6 @@ async function processImage(file, apiKey) {
         loading.style.display = 'none';
         previewSection.style.display = 'block';
         
-        // 保存结果 URL 用于下载
         resultImage.dataset.downloadUrl = url;
         
     } catch (error) {
@@ -132,7 +100,6 @@ async function processImage(file, apiKey) {
     }
 }
 
-// 下载图片
 downloadBtn.addEventListener('click', () => {
     const url = resultImage.dataset.downloadUrl;
     if (url) {
@@ -143,13 +110,9 @@ downloadBtn.addEventListener('click', () => {
     }
 });
 
-// 重新上传
 resetBtn.addEventListener('click', () => {
     previewSection.style.display = 'none';
     fileInput.value = '';
     resultImage.src = '';
     resultImage.dataset.downloadUrl = '';
 });
-
-// 初始化
-init();
