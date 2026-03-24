@@ -1,4 +1,13 @@
 export async function onRequestPost({ request, env }) {
+  return handler(request, env);
+}
+
+// 兼容 GET/POST
+export async function onRequest({ request, env }) {
+  return handler(request, env);
+}
+
+async function handler(request, env) {
   // 设置 CORS 头
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -9,6 +18,11 @@ export async function onRequestPost({ request, env }) {
   // 处理 OPTIONS 预检请求
   if (request.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // 只允许 POST
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   try {
